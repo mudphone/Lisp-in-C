@@ -1,2 +1,2 @@
 # MyFirstLisp
-A Lisp from [*Build Your Own Lisp in C*](http://buildyourownlisp.com/) by Daniel Holden.
+A Lisp from [*Build Your Own Lisp*](http://buildyourownlisp.com/): _Learn C and build your own programming language in 1000 lines of code!_ by Daniel Holden.

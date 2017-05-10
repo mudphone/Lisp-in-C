@@ -500,8 +500,7 @@ lval* lval_eval(lenv* e, lval* v) {
 }
 
 int main(int argc, char** argv) {
-  puts("line 1 :hello");
-
+  
   /* Create Some Parsers */
   mpc_parser_t* Number   = mpc_new("number");
   mpc_parser_t* Symbol   = mpc_new("symbol");
@@ -510,27 +509,25 @@ int main(int argc, char** argv) {
   mpc_parser_t* Expr     = mpc_new("expr");
   mpc_parser_t* Lispy    = mpc_new("lispy");
 
-  puts("line 2: hello");
   /* Define them with the following Language */
-    mpca_lang(MPC_LANG_DEFAULT,
-    "                                                     \
-      number : /-?[0-9]+/ ;                               \
-      symbol : /[a-zA-Z0-9_+\\-*\\/\\\\=<>!&]+/ ;         \
-      sexpr  : '(' <expr>* ')' ;                          \
-      qexpr  : '{' <expr>* '}' ;                          \
-      expr   : <number> | <symbol> | <sexpr> | <qexpr> ;  \
-      lispy  : /^/ <expr>* /$/ ;                          \
-    ",
-    Number, Symbol, Sexpr, Qexpr, Expr, Lispy);
+  mpca_lang(MPC_LANG_DEFAULT,
+            "                                                 \
+               number   : /-?[0-9]+/ ;                        \
+               symbol   : /[a-zA-Z0-9_+\\-*\\/\\\\=<>!&]+/ ; \
+               sexpr    : '(' <expr>* ')' ;                   \
+               qexpr    : '{' <expr>* '}' ;                   \
+               expr     : <number> | <symbol> | <sexpr> | <qexpr> ; \
+               lispy    : /^/ <expr>* /$/ ;                   \
+            ",
+            Number, Symbol, Sexpr, Qexpr, Expr, Lispy);
 
-  puts("line 3: hello");  
   /* Print Version and Exit Information */
   puts("Lispy Version 0.0.0.0.1");
   puts("Press Ctrl+c to Exit.\n");
-  puts("line 4: hello");
+  
   lenv* e = lenv_new();
   lenv_add_builtins(e);
-  puts("line 5: hello");
+  
   /* In a never-ending loop... */
   while (1) {
 

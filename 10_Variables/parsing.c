@@ -126,7 +126,7 @@ lval* lval_read_num(mpc_ast_t* t) {
   errno = 0;
   long x = strtol(t->contents, NULL, 10);
   return errno != ERANGE ?
-    lval_num(x) : lval_err("invalid number");
+    lval_num(x) : lval_err("%s is not a valid number.", t->contents);
 }
 
 lval* lval_add(lval* v, lval* x) {
@@ -561,8 +561,11 @@ lval* lval_eval_sexpr(lenv* e, lval* v) {
   /* Ensure First Element is Symbol */
   lval* f = lval_pop(v, 0);
   if (f->type != LVAL_FUN) {
+    lval* err = lval_err("First element is not a function. "
+                         "Got %s, Expected %s.",
+                         ltype_name(f->type), ltype_name(LVAL_FUN));
     lval_del(f); lval_del(v);
-    return lval_err("first element is not a function");
+    return err;
   }
 
   /* Call builtin with operator */

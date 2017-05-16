@@ -1,4 +1,4 @@
-TARGET = parsing
+TARGET = lispy
 
 all: compile
 

@@ -196,7 +196,8 @@ lval* lval_read(mpc_ast_t* t) {
     if (strcmp(t->children[i]->contents, ")") == 0) { continue; }
     if (strcmp(t->children[i]->contents, "{") == 0) { continue; }
     if (strcmp(t->children[i]->contents, "}") == 0) { continue; }
-    if (strcmp(t->children[i]->tag, "regex") == 0) { continue; }
+    if (strcmp(t->children[i]->tag,  "regex") == 0) { continue; }
+    if (strstr(t->children[i]->tag, "comment")) { continue; }
     x = lval_add(x, lval_read(t->children[i]));
   }
 
@@ -947,6 +948,7 @@ int main(int argc, char** argv) {
   mpc_parser_t* Number   = mpc_new("number");
   mpc_parser_t* Symbol   = mpc_new("symbol");
   mpc_parser_t* String   = mpc_new("string");
+  mpc_parser_t* Comment  = mpc_new("comment");
   mpc_parser_t* Sexpr    = mpc_new("sexpr");
   mpc_parser_t* Qexpr    = mpc_new("qexpr");
   mpc_parser_t* Expr     = mpc_new("expr");
@@ -958,12 +960,14 @@ int main(int argc, char** argv) {
                number   : /-?[0-9]+/ ;                       \
                symbol   : /[a-zA-Z0-9_+\\-*\\/\\\\=<>!&]+/ ; \
                string   : /\"(\\\\.|[^\"])*\"/ ;             \
+               comment  : /;[^\\r\\n]*/  ;                   \
                sexpr    : '(' <expr>* ')' ;                  \
                qexpr    : '{' <expr>* '}' ;                  \
-               expr     : <number> | <symbol> | <string> | <sexpr> | <qexpr> ; \
+               expr     : <number> | <symbol> | <string>     \
+                        | <comment> | <sexpr> | <qexpr> ;    \
                lispy    : /^/ <expr>* /$/ ;                  \
             ",
-            Number, Symbol, String, Sexpr, Qexpr, Expr, Lispy);
+            Number, Symbol, String, Comment, Sexpr, Qexpr, Expr, Lispy);
 
   /* Print Version and Exit Information */
   puts("Lispy Version 0.0.0.0.1");
@@ -1003,7 +1007,7 @@ int main(int argc, char** argv) {
 
   lenv_del(e);
   /* Understanding and Delete our Parsers */
-  mpc_cleanup(7, Number, Symbol, String, Sexpr, Qexpr, Expr, Lispy);
+  mpc_cleanup(8, Number, Symbol, String, Comment, Sexpr, Qexpr, Expr, Lispy);
 
   return 0;
 }
